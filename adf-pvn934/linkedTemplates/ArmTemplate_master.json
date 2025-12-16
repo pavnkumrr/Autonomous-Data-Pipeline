@@ -1,0 +1,98 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-pvn934"
+		},
+		"LS_AI_Agent_Function_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'LS_AI_Agent_Function'"
+		},
+		"adlsl inked service_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adlsl inked service'"
+		},
+		"ls_sql db_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_sql db'"
+		},
+		"LS_AI_Agent_Function_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "https://adf-agent-fix-v2-bua7bpfmcre4hzae.canadacentral-01.azurewebsites.net"
+		},
+		"adlsl inked service_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://stdhackathon234.dfs.core.windows.net/"
+		},
+		"ls_sql db_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlsrvr24.database.windows.net"
+		},
+		"ls_sql db_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldb24"
+		},
+		"ls_sql db_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "pavnkumr"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adf-pvn934_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"LS_AI_Agent_Function_functionKey": {
+						"value": "[parameters('LS_AI_Agent_Function_functionKey')]"
+					},
+					"adlsl inked service_accountKey": {
+						"value": "[parameters('adlsl inked service_accountKey')]"
+					},
+					"ls_sql db_password": {
+						"value": "[parameters('ls_sql db_password')]"
+					},
+					"LS_AI_Agent_Function_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('LS_AI_Agent_Function_properties_typeProperties_functionAppUrl')]"
+					},
+					"adlsl inked service_properties_typeProperties_url": {
+						"value": "[parameters('adlsl inked service_properties_typeProperties_url')]"
+					},
+					"ls_sql db_properties_typeProperties_server": {
+						"value": "[parameters('ls_sql db_properties_typeProperties_server')]"
+					},
+					"ls_sql db_properties_typeProperties_database": {
+						"value": "[parameters('ls_sql db_properties_typeProperties_database')]"
+					},
+					"ls_sql db_properties_typeProperties_userName": {
+						"value": "[parameters('ls_sql db_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

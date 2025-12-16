@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-pvn934"
+		},
+		"LS_AI_Agent_Function_functionKey": {
+			"value": ""
+		},
+		"adlsl inked service_accountKey": {
+			"value": ""
+		},
+		"ls_sql db_password": {
+			"value": ""
+		},
+		"LS_AI_Agent_Function_properties_typeProperties_functionAppUrl": {
+			"value": "https://adf-agent-fix-v2-bua7bpfmcre4hzae.canadacentral-01.azurewebsites.net"
+		},
+		"adlsl inked service_properties_typeProperties_url": {
+			"value": "https://stdhackathon234.dfs.core.windows.net/"
+		},
+		"ls_sql db_properties_typeProperties_server": {
+			"value": "sqlsrvr24.database.windows.net"
+		},
+		"ls_sql db_properties_typeProperties_database": {
+			"value": "sqldb24"
+		},
+		"ls_sql db_properties_typeProperties_userName": {
+			"value": "pavnkumr"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

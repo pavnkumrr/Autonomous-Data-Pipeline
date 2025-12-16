@@ -1,0 +1,9 @@
+{
+	"name": "adf-pvn934",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "993969a6-f982-4fc3-bc17-c8aa759eeb23",
+		"tenantId": "687f51c3-0c5d-4905-84f8-97c683a5b9d1"
+	}
+}

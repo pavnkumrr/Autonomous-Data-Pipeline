@@ -1,0 +1,149 @@
+{
+	"name": "PL_Autonomous_Fix",
+	"properties": {
+		"activities": [
+			{
+				"name": "EP_Initial_Run",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_Copy_Data",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SetVar_Error_JSON",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "EP_Initial_Run",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "SchemaInputJSON",
+					"value": {
+						"value": "@string(json(concat('{\"errorMessage\":\"', replace(activity('EP_Initial_Run').error.message, '\"', ''''), '\"}')))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Call_AI_Agent",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [
+					{
+						"activity": "SetVar_Error_JSON",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "OpenAIFixPipeline",
+					"body": {
+						"value": "@json(variables('SchemaInputJSON'))",
+						"type": "Expression"
+					},
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"method": "POST"
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_AI_Agent_Function",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "SetVar_Mapping_Fix",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Call_AI_Agent",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "MappingFixJSON",
+					"value": {
+						"value": "@string(activity('Call_AI_Agent').output)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "EP_Rerun_Fix_Run",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SetVar_Mapping_Fix",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_Copy_Data",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"MappingFixJSON": {
+							"value": "@string(variables('MappingFixJSON'))",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"variables": {
+			"SchemaInputJSON": {
+				"type": "String"
+			},
+			"CorrectedMapping": {
+				"type": "String"
+			},
+			"MappingFixJSON": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-12-16T05:21:55Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

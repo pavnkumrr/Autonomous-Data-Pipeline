@@ -1,0 +1,68 @@
+{
+	"name": "PL_Copy_Data",
+	"properties": {
+		"activities": [
+			{
+				"name": "AC_Copy_Source_to_Sink",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "client_data.csv",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"value": "@json(pipeline().parameters.MappingFixJSON)",
+						"type": "Expression"
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "sourceds",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sql_sb",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"MappingFixJSON": {
+				"type": "string",
+				"defaultValue": {
+					"type": "TabularTranslator",
+					"mappings": []
+				}
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-12-15T11:28:14Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
